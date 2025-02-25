@@ -40,11 +40,11 @@ export class AccountController {
   @UseGuards(AuthGuard)
   @Post('cash-out')
   public async cashOut(@Req() req: Request & IsessionPayload) {
-    const user = req.user;
-    if (!user) {
+    const userSession = req.user;
+    if (!userSession) {
       throw new HttpException('No user found', HttpStatus.BAD_REQUEST);
     }
-    const account = await this.accService.getAccountById(user.id);
+    const account = await this.accService.getAccountById(userSession.sub);
     const stats = await this.financialService.cashOutForAccount(account?.id);
     return { account, stats };
   }
