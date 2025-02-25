@@ -1,0 +1,46 @@
+# Use postgres/example user/password credentials
+version: '3.9'
+
+services:
+
+  casino_client:
+    build: ./CasinoClient
+    ports:
+      - 9090:80
+    depends_on:
+      - casino_api
+    environment:
+      - VITE_API_URL=casino_api:3000
+
+  casino_api:
+    build: ./CasinoAPI
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=admin_casino_user
+      - DATABASE_PASSWORD=admin_casino_user_password
+      - DATABASE_NAME=casino_db
+      - JWT_SECRET_KEY=secret_key
+      - JWT_EXPIRATION_TIME=1d
+      - SENTRY_DSN=https://163b6865a591c35a6bebb27e00c3d4ab@o307963.ingest.us.sentry.io/4508875845337089
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: admin_casino_user_password
+      POSTGRES_USER: admin_casino_user
+      POSTGRES_DB: casino_db
+    ports:
+      - 5432:5432
+      
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
