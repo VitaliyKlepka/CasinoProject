@@ -6,9 +6,11 @@ import { Account } from './entities/account.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_SECRET_TEXT, JWT_EXPIRATION_TIME } from '../auth/constants';
 import { FinancialModule } from 'src/financial/financial.module';
+import { AppLoggerModule } from 'src/logger/appLogger.module';
 
 @Module({
   imports: [
+    AppLoggerModule,
     TypeOrmModule.forFeature([Account]),
     FinancialModule,
     JwtModule.register({

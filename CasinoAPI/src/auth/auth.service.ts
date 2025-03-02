@@ -5,10 +5,12 @@ import { Account } from 'src/account/entities/account.entity';
 import { AuthSession } from './entities/auth_session.entity';
 import { MoreThan, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AppLoggerService } from 'src/logger/appLogger.service';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly logger: AppLoggerService,
     private readonly jwtService: JwtService,
     @InjectRepository(AuthSession)
     private readonly authSessionRepository: Repository<AuthSession>,
@@ -39,6 +41,7 @@ export class AuthService {
       }),
       expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1), // 1 day
     };
+
     const authSession =
       await this.authSessionRepository.save(authSessionPayload);
 
@@ -50,12 +53,14 @@ export class AuthService {
       where: { deviceId, expires_at: MoreThan(new Date()) },
     });
     if (!session) {
-      // TODO: Log the detailed message to logs collector
+      this.logger.warn('[AUTH]::[CLOSE_SESSION]::Session not found', { deviceId });
       return false;
     }
     const updateResult = await this.authSessionRepository.update(session.id, {
       expires_at: new Date(),
     });
-    return updateResult.affected ? updateResult.affected > 0 : false;
+    const result = updateResult.affected ? updateResult.affected > 0 : false;
+    this.logger.log('[AUTH]::[CLOSE_SESSION]::[SUCCESS]::', { result, sessionId: session.id });
+    return result;
   }
 }

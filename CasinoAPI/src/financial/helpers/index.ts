@@ -6,3 +6,13 @@ export const getCreditsAvailable = (credits: number = 0) => {
   }
   return credits - DEFAULT_CREDITS_ASSIGNMENT;
 };
+
+export const getCashToDeposit = (cash: number = 0) => {
+  if (cash > 0) {
+    if (cash > 10) {
+      return 10;
+    }
+    return cash;
+  }
+  return 0;
+};

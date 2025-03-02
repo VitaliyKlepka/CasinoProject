@@ -12,10 +12,12 @@ import { IsessionPayload } from 'src/auth/interfaces';
 import { ISpinResults } from './interfaces';
 import { FinancialService } from 'src/financial/financial.service';
 import { MINIMAL_CREDITS_REQUIREMENT } from 'src/financial/constants';
+import { AppLoggerService } from 'src/logger/appLogger.service';
 
 @Controller('game')
 export class GameController {
   constructor(
+    private readonly logger: AppLoggerService,
     private readonly gameService: GameService,
     private readonly finStatService: FinancialService,
   ) {}
@@ -30,6 +32,7 @@ export class GameController {
       userSession.sub,
     );
     if (finStats.credits < MINIMAL_CREDITS_REQUIREMENT) {
+      this.logger.log('[GAME]::[TWIST]::[INSUFFICIENT_CREDITS]::', { userId: userSession.sub, sessionId: userSession.id, credits: finStats.credits });
       throw new HttpException('Insufficient Credits', HttpStatus.BAD_REQUEST);
     }
     const spin = await this.gameService.getSpin(finStats.credits);

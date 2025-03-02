@@ -4,12 +4,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { config } from 'dotenv';
+import { AppLoggerService } from 'src/logger/appLogger.service';
 
 config();
 
 async function bootstrap() {
   const DEFAULT_APP_PORT = 3000;
   const app = await NestFactory.create(AppModule, { cors: true });
+  app.useLogger(app.get(AppLoggerService));
 
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()

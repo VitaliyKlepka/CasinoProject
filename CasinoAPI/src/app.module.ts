@@ -7,9 +7,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import config from '../config/config';
+import { AppLoggerModule } from 'src/logger/appLogger.module';
 
 @Module({
   imports: [
+    AppLoggerModule,
     SentryModule.forRoot(),
     ConfigModule.forRoot({ load: [config], isGlobal: true }),
     AuthModule,

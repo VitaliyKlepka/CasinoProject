@@ -4,7 +4,7 @@ import { FinancialStatistic } from './entities/fin_stat.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { IFinancialStatistic } from './interfaces';
 import { DEFAULT_CREDITS_ASSIGNMENT } from './constants';
-import { getCreditsAvailable } from './helpers';
+import { getCashToDeposit, getCreditsAvailable } from './helpers';
 
 @Injectable()
 export class FinancialService {
@@ -63,4 +63,32 @@ export class FinancialService {
 
     return null;
   }
+
+  public async depositForAccount(
+    accountId: number,
+  ): Promise<IFinancialStatistic | null> {
+    const finStats = await this.financialStatisticRepository.findOneBy({
+      accountId,
+    });
+    if (finStats && finStats.ballance > 0) {
+      const cashToDeposit = getCashToDeposit(finStats.ballance);
+      if (cashToDeposit === 0) {
+        return null;
+      }
+      const newStats = {
+        credits: finStats.credits + cashToDeposit,
+        ballance: finStats.ballance - cashToDeposit,
+      };
+      // Can be replaced with a logic for transaction to PaymentGateway
+      const updateResult = await this.financialStatisticRepository.update(
+        { accountId },
+        newStats,
+      );
+
+      return updateResult.affected ? { ...finStats, ...newStats } : null;
+    }
+
+    return null;
+  }
+  
 }

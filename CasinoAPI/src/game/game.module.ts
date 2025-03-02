@@ -4,9 +4,11 @@ import { GameService } from './game.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_SECRET_TEXT, JWT_EXPIRATION_TIME } from 'src/auth/constants';
 import { FinancialModule } from 'src/financial/financial.module';
+import { AppLoggerModule } from 'src/logger/appLogger.module';
 
 @Module({
   imports: [
+    AppLoggerModule,
     FinancialModule,
     JwtModule.register({
       secret: JWT_SECRET_TEXT,
