@@ -6,6 +6,7 @@ export const getCashOutMutation = (
     onSuccess: (data: any, variables: any, context: any) => void,
     onError?: (err: any) => void
 ) => {
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
     let navigate = useNavigate()
     return {
         mutationFn: async () => {
