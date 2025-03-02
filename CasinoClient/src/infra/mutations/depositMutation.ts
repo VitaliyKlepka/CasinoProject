@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { API_BASE_URL } from "../constants"
 
-export const getCashOutMutation = (
+export const getDepositMutation = (
     session: string,
     onSuccess: (data: any, variables: any, context: any) => void,
     onError?: (err: any) => void
@@ -9,7 +9,7 @@ export const getCashOutMutation = (
     let navigate = useNavigate()
     return {
         mutationFn: async () => {
-          const response = await fetch(`${API_BASE_URL}/account/cash-out`, {
+          const response = await fetch(`${API_BASE_URL}/account/deposit`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -18,8 +18,8 @@ export const getCashOutMutation = (
           })
           if (!response.ok) {
             if (response.status === 401) {
-                navigate('/auth')
-              }
+              navigate('/auth')
+            }
             throw new Error('Network response was not ok')
           }
           return response.json()
