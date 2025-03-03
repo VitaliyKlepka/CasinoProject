@@ -11,6 +11,10 @@ services:
       - casino_api
     environment:
       - VITE_API_URL=casino_api:3000
+      - VITE_API_DOMAIN=localhost
+      - VITE_SENTRY_DSN=https://49eb2efd314d807d882980c7cd4e7125@o307963.ingest.us.sentry.io/4508902577864704
+      - VITE_ENVIRONMENT=test
+      - VITE_APP_ID=12345
 
   casino_api:
     build: ./CasinoAPI
@@ -18,15 +22,21 @@ services:
       - 3000:3000
     depends_on:
       - db
+      - loki
     environment:
+      - PORT=3000
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
       - DATABASE_USERNAME=admin_casino_user
       - DATABASE_PASSWORD=admin_casino_user_password
       - DATABASE_NAME=casino_db
-      - JWT_SECRET_KEY=secret_key
+      - JWT_SECRET_KEY=hard!to-guess_secret
       - JWT_EXPIRATION_TIME=1d
       - SENTRY_DSN=https://163b6865a591c35a6bebb27e00c3d4ab@o307963.ingest.us.sentry.io/4508875845337089
+      - LOKI_HOST=http://loki:3100
+      - LOKI_APP_LABEL=casino_server
+      - LOKI_INTERVAL=3
+      - LOG_LEVEL=info
 
   db:
     image: postgres

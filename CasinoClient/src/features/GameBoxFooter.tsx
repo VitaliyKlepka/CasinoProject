@@ -49,7 +49,7 @@ const GameBoxFooter: React.FC<GameBoxFooterProps> = () => {
       >CASH-OUT</button>
       <button
         className='game-action-button'
-        disabled={!twistAvailable}
+        disabled={!twistAvailable || credits === 0}
         onClick={() => {
           setPointsToDefault()
           setTwistAvailable(false)

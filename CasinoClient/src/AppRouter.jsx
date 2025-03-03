@@ -1,10 +1,7 @@
-import { useState } from 'react'
 import AppLayout from './features/Layout'
 import GameBoard from './pages/GameBoard'
 import AuthPage from './pages/Auth'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-// import reactLogo from './assets/react.svg'
-// <img src={reactLogo} className="logo react" alt="React logo" />
 
 function AppRouter() {
   return (

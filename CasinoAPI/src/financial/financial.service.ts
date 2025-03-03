@@ -46,7 +46,7 @@ export class FinancialService {
     if (finStats) {
       const creditsToWithdraw = getCreditsAvailable(finStats.credits);
       if (creditsToWithdraw === 0) {
-        return null;
+        return finStats;
       }
       const newStats = {
         credits: finStats.credits - creditsToWithdraw,
